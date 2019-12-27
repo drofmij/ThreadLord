@@ -1,12 +1,13 @@
-package org.drofmij.threadlord.examples;
+package io.github.drofmij.threadlord.examples;
 
+import io.github.drofmij.threadlord.Minion;
+import io.github.drofmij.threadlord.ThreadLord;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.drofmij.threadlord.Minion;
-import org.drofmij.threadlord.ThreadLord;
-import org.drofmij.threadlord.test.TestThreadLord;
+
+import io.github.drofmij.threadlord.test.TestThreadLord;
 
 public class Examples {
 

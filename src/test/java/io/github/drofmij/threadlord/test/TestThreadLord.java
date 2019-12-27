@@ -1,6 +1,8 @@
-package org.drofmij.threadlord.test;
+package io.github.drofmij.threadlord.test;
 
 import com.google.common.hash.Hashing;
+import io.github.drofmij.threadlord.Minion;
+import io.github.drofmij.threadlord.ThreadLord;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,12 +10,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.drofmij.threadlord.Minion;
-import org.drofmij.threadlord.ThreadLord;
 import org.junit.Test;
 
 public class TestThreadLord {

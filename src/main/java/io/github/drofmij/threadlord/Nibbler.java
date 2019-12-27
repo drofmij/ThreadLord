@@ -1,4 +1,4 @@
-package org.drofmij.threadlord;
+package io.github.drofmij.threadlord;
 
 import java.io.BufferedReader;
 import java.io.File;

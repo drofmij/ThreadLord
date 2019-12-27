@@ -1,4 +1,4 @@
-package org.drofmij.threadlord;
+package io.github.drofmij.threadlord;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.Callable;
@@ -15,7 +15,7 @@ public abstract class Minion<T> implements Callable<T> {
     private static float total;
     private static float done;
     private static int statusFrequency;
-    private double percent;
+    private static double percent;
 
     private final boolean statusOut;
 
@@ -76,6 +76,8 @@ public abstract class Minion<T> implements Callable<T> {
     protected static void init(int total, int statusFrequency) {
         Minion.total = total;
         Minion.statusFrequency = statusFrequency;
+        Minion.done = 0;
+        Minion.percent = 0;
     }
 
     /**
