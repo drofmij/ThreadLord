@@ -2,11 +2,7 @@
 # ThreadLord
  **java utils for multi-threaded io operations**
  
-**ThreadLord** - handles simple thread management for a set of Minion objects and
- * bundles the results into a list - very useful for heavy IO operations such as
- * reading or writing from hundreds or thousands of files locally or in cloud
- * data store such as S3 - thread pool can be single use or can be reused
- * multiple times for different workloads in the same application.
+ThreadLord handles simple thread management for a set of Minion objects and bundles the results into a list - very useful for heavy IO operations such as reading or writing from hundreds or thousands of files locally or in cloud data store such as S3 thread pool can be single use or can be reused multiple times for different workloads in the same application.
 
 ## Example
 
