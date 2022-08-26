@@ -31,63 +31,64 @@ public class TestThreadLord {
         tmpdirfile.mkdirs();
         int numpieces = 1000;
         int numthreads = 100;
-        ThreadLord<String> threadLord = new ThreadLord<>(numthreads, false);
-        for (int idx = 0; idx < numpieces; idx++) {
-            Integer threadNum = idx;
-            // write 1 file with 10000 lines of test data for each minion
-            threadLord.addMinion(new Minion<String>(true) {
-                @Override
-                protected String work() {
-                    try (FileWriter fw = new FileWriter(tmpdirpath + "tmp_" + threadNum);
-                            BufferedWriter bw = new BufferedWriter(fw);) {
-                        for (Integer line = 0; line < 10000; line++) {
-                            String sha256hex = Hashing.sha256()
-                                    .hashString(Long.toString(System.currentTimeMillis()) + "_" + line.toString(), StandardCharsets.UTF_8)
-                                    .toString();
-                            bw.write(sha256hex + "\n");
-                        }
-                    } catch (IOException ex) {
-                        Logger.getLogger(TestThreadLord.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    return Long.toString(System.currentTimeMillis()) + "_" + threadNum.toString();
-                }
-            });
-        }
-        // run the Minions
-        threadLord.run();
-        try (FileWriter fw = new FileWriter(tmpdirpath + "tmp_combo");
-                BufferedWriter bw = new BufferedWriter(fw);) {
-            for (File file : tmpdirfile.listFiles()) {
-                if (!file.getName().contains("combo")) {
-                    // read each of the test files and write out to 1 result file
-                    threadLord.addMinion(new Minion<String>(true) {
-                        @Override
-                        protected String work() {
-                            try (FileReader fr = new FileReader(file);
-                                    BufferedReader br = new BufferedReader(fr);) {
-                                String line;
-                                while ((line = br.readLine()) != null) {
-                                    bw.write(line + "\n");
-                                }
-                            } catch (IOException ex) {
-                                Logger.getLogger(TestThreadLord.class.getName()).log(Level.SEVERE, null, ex);
+        try(ThreadLord<String> threadLord = new ThreadLord<>(numthreads, false, true);) {
+            for (int idx = 0; idx < numpieces; idx++) {
+                Integer threadNum = idx;
+                // write 1 file with 10000 lines of test data for each minion
+                threadLord.add(new Minion<String>() {
+                    @Override
+                    protected String work() {
+                        try (FileWriter fw = new FileWriter(tmpdirpath + "tmp_" + threadNum);
+                             BufferedWriter bw = new BufferedWriter(fw);) {
+                            for (Integer line = 0; line < 10000; line++) {
+                                String sha256hex = Hashing.sha256()
+                                        .hashString(Long.toString(System.currentTimeMillis()) + "_" + line.toString(), StandardCharsets.UTF_8)
+                                        .toString();
+                                bw.write(sha256hex + "\n");
                             }
-                            file.delete();
-                            return "";
+                        } catch (IOException ex) {
+                            Logger.getLogger(TestThreadLord.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    });
-                }
+                        return Long.toString(System.currentTimeMillis()) + "_" + threadNum.toString();
+                    }
+                });
             }
+            // run the Minions
             threadLord.run();
-        } catch (IOException ex) {
-            Logger.getLogger(TestThreadLord.class.getName()).log(Level.SEVERE, null, ex);
+            try (FileWriter fw = new FileWriter(tmpdirpath + "tmp_combo");
+                 BufferedWriter bw = new BufferedWriter(fw);) {
+                for (File file : tmpdirfile.listFiles()) {
+                    if (!file.getName().contains("combo")) {
+                        // read each of the test files and write out to 1 result file
+                        threadLord.add(new Minion<String>() {
+                            @Override
+                            protected String work() {
+                                try (FileReader fr = new FileReader(file);
+                                     BufferedReader br = new BufferedReader(fr);) {
+                                    String line;
+                                    while ((line = br.readLine()) != null) {
+                                        bw.write(line + "\n");
+                                    }
+                                } catch (IOException ex) {
+                                    Logger.getLogger(TestThreadLord.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                file.delete();
+                                return "";
+                            }
+                        });
+                    }
+                }
+                threadLord.run();
+            } catch (IOException ex) {
+                Logger.getLogger(TestThreadLord.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+
+            // cleanup temp files
+            new File(tmpdirpath + "tmp_combo").delete();
+            tmpdirfile.delete();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        // shutdown the thread executor
-        threadLord.shutdown();
-
-        // cleanup temp files
-        new File(tmpdirpath + "tmp_combo").delete();
-        tmpdirfile.delete();
     }
 }

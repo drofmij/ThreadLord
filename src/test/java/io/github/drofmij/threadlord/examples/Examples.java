@@ -2,6 +2,8 @@ package io.github.drofmij.threadlord.examples;
 
 import io.github.drofmij.threadlord.Minion;
 import io.github.drofmij.threadlord.ThreadLord;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -18,17 +20,17 @@ public class Examples {
     public static void example1() {
         try {
             String[] stringsToProcess = {};
-            // read input, build list of strings in code, etc.
+            // read input, build list of strings or other units of work in code, etc.
             
-            // initialize ThreadLord with 10 threads, set runOnce to true
-            ThreadLord<String> threadLord = new ThreadLord<>(10, true);
+            // initialize ThreadLord with 10 threads, set runOnce to true, set status output true
+            ThreadLord<String> threadLord = new ThreadLord<>(10, true, true);
             for (String toprocess : stringsToProcess) {
                 /* 
                 * inline implementation of Minion.work()
                 * - allows access to containing class variables etc.
                 * - reduces amount of Minion code to write (no constructor, or member vars needed)
                  */
-                threadLord.addMinion(new Minion<String>(true) {
+                threadLord.add(new Minion<String>() {
                     @Override
                     protected String work() {
                         // perform operation here.
@@ -44,6 +46,8 @@ public class Examples {
             
         } catch (InterruptedException | ExecutionException ex) {
             Logger.getLogger(TestThreadLord.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

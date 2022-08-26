@@ -1,7 +1,8 @@
-package io.github.drofmij.threadlord;
+package io.github.drofmij.io;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +14,7 @@ import java.io.InputStreamReader;
  *
  * @author drofmij
  */
-public abstract class Nibbler {
+public abstract class Nibbler implements Closeable {
 
     private String filename;
 
@@ -61,6 +62,11 @@ public abstract class Nibbler {
                 handleLine(line);
             }
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        inputstream.close();
     }
 
     public abstract void handleLine(String line);
