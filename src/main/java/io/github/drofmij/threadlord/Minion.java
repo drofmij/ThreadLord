@@ -12,10 +12,16 @@ import java.util.concurrent.Callable;
  */
 public abstract class Minion<T> implements Callable<T> {
 
+    private MinionStatsHandler stats;
+
     /**
      * default constructor
      */
     public Minion() {
+    }
+
+    public void setStats(MinionStatsHandler stats) {
+        this.stats = stats;
     }
 
     /**
@@ -27,7 +33,9 @@ public abstract class Minion<T> implements Callable<T> {
      */
     @Override
     public T call() throws Exception {
-        return work();
+        T result = work();
+        stats.update();
+        return result;
     }
 
     /**

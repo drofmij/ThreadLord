@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * ThreadLord - handles simple thread management for a set of Minion objects and
@@ -28,9 +25,8 @@ public class ThreadLord<T> implements Closeable {
     private final boolean runOnce;
     private final int numThreads;
 
-    private int statusFrequencyPercent;
-    private double percent;
-    private boolean statusOut;
+    private boolean outputStatus;
+    private MinionStatsHandler stats = null;
 
     /**
      * Initializes the ThreadLord with specified number of threads defaults runonce to true and statusOut to true
@@ -48,24 +44,16 @@ public class ThreadLord<T> implements Closeable {
      *
      * @param numThreads
      * @param runOnce
-     * @param statusOut
+     * @param outputStatus
      */
-    public ThreadLord(int numThreads, boolean runOnce, boolean statusOut) {
-        this.statusOut = statusOut;
+    public ThreadLord(int numThreads, boolean runOnce, boolean outputStatus) {
+        if(outputStatus) {
+            this.stats = new MinionStatsHandler();
+        }
         this.minions = new ArrayList<>();
         this.runOnce = runOnce;
         this.numThreads = numThreads;
         this.executor = Executors.newFixedThreadPool(numThreads);
-        this.statusFrequencyPercent = 1;
-    }
-
-
-    public void setStatusFrequencyPercent(int statusFrequencyPercent) {
-        this.statusFrequencyPercent = statusFrequencyPercent;
-    }
-
-    public void setStatusOut(boolean statusOut) {
-        this.statusOut = statusOut;
     }
 
     /**
@@ -75,6 +63,7 @@ public class ThreadLord<T> implements Closeable {
      * @param minion worker to be run
      */
     public void add(Minion<T> minion) {
+        minion.setStats(stats);
         minions.add(minion);
     }
 
@@ -88,38 +77,22 @@ public class ThreadLord<T> implements Closeable {
      * @throws ExecutionException
      */
     public List<T> run() throws InterruptedException, ExecutionException, IOException {
-        if(statusOut) {
+        if(stats != null) {
             System.out.println("ThreadLord processing " + minions.size() + " minions with " + numThreads + " threads.");
         }
         List<T> results = new ArrayList<>();
+        stats.setTotal(minions.size());
         List<Future<T>> resultFutures = executor.invokeAll(minions);
         for (Future future : resultFutures) {
             results.add((T) future.get());
-            handleStatus(resultFutures.indexOf(future) + 1, resultFutures.size());
         }
 
         if (runOnce) {
             close();
         } else {
-            percent = 0.0;
             minions.clear();
         }
         return results;
-    }
-
-    /**
-     * Handle status output if statusOut is true, outputs every statusFrequencyPercent
-     *
-     * @param current
-     * @param total
-     */
-    private void handleStatus(int current, int total) {
-        if (statusOut) {
-            if (current % statusFrequencyPercent == 0 && percent < (current / total) * 100d) {
-                System.out.println(new DecimalFormat("#.00").format((current / total) * 100d) + " %");
-            }
-            percent = (current / total) * 100d;
-        }
     }
 
     /**
