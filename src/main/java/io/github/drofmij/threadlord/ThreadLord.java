@@ -2,7 +2,6 @@ package io.github.drofmij.threadlord;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -81,7 +80,7 @@ public class ThreadLord<T> implements Closeable {
             System.out.println("ThreadLord processing " + minions.size() + " minions with " + numThreads + " threads.");
         }
         List<T> results = new ArrayList<>();
-        stats.setTotal(minions.size());
+        stats.init(minions.size());
         List<Future<T>> resultFutures = executor.invokeAll(minions);
         for (Future future : resultFutures) {
             results.add((T) future.get());

@@ -28,8 +28,8 @@ public abstract class Minion<T> implements Callable<T> {
      * call() over rides call() in super() in order to output status percentage
      * if statusOut is true.
      *
-     * @return
-     * @throws Exception
+     * @return result object of type T
+     * @throws Exception in case of error that is not handled in work()
      */
     @Override
     public T call() throws Exception {
