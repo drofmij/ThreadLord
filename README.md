@@ -4,6 +4,15 @@
  
 ThreadLord handles simple thread management for a set of Minion objects and bundles the results into a list - very useful for heavy IO operations such as reading or writing from hundreds or thousands of files locally or in cloud data store such as S3 thread pool can be single use or can be reused multiple times for different workloads in the same application.
 
+### Releases are in maven central: https://search.maven.org/artifact/io.github.drofmij/threadlord/0.2.0.3/jar
+
+    <dependency>
+      <groupId>io.github.drofmij</groupId>
+      <artifactId>threadlord</artifactId>
+      <version>0.2.0.3</version>
+    </dependency>
+
+
 ## Example
 
      /**
@@ -20,8 +29,8 @@ ThreadLord handles simple thread management for a set of Minion objects and bund
             for (String toprocess : stringsToProcess) {
                 /* 
                 * inline implementation of Minion.work()
-                * - allows access to containing class variables etc.
-                * - reduces amount of Minion code to write (no constructor, or member vars needed)
+                * - allows access read-only to containing class variables etc.
+                * - reduces amount of Minion code to write
                  */
                 threadLord.addMinion(new Minion<String>() {
                     @Override
