@@ -6,7 +6,7 @@
     <groupId>io.github.drofmij</groupId>
     <artifactId>threadlord</artifactId>
     <name>ThreadLord</name>
-    <version>0.2.0.4-SNAPSHOT</version>
+    <version>0.2.0.4</version>
     <packaging>jar</packaging>
     <description>java utils for multi-threaded io https://github.com/drofmij/ThreadLord</description>
     <url>https://github.com/drofmij/ThreadLord</url>
