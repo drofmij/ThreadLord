@@ -84,7 +84,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>8.4.0</version>
+                <version>3.2.0</version>
                 <configuration>
                     <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
                     <failBuildOnCVSS>8</failBuildOnCVSS>
@@ -128,7 +128,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>LATEST</version>
+                <version>3.2.0</version>
                 <reportSets>
                     <reportSet>
                         <reports>
