@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * ThreadLord - handles simple thread management for a set of Minion objects and
@@ -24,7 +26,6 @@ public class ThreadLord<T> implements Closeable {
     private final boolean runOnce;
     private final int numThreads;
 
-    private boolean outputStatus;
     private MinionStatsHandler stats = null;
 
     /**
@@ -35,15 +36,14 @@ public class ThreadLord<T> implements Closeable {
 
     public ThreadLord(int numThreads) {
         this(numThreads, true, true);
-
     }
 
     /**
      * Initializes the ThreadLord with specified number of threads, sets runonce and statusOut as specified
      *
-     * @param numThreads
-     * @param runOnce
-     * @param outputStatus
+     * @param numThreads number of threads to use while running minions
+     * @param runOnce use this ThreadLord instantiation for one job if true, or for multiple jobs if false
+     * @param outputStatus true to output percentage and job completion stats, false for no output
      */
     public ThreadLord(int numThreads, boolean runOnce, boolean outputStatus) {
         if(outputStatus) {
@@ -72,8 +72,9 @@ public class ThreadLord<T> implements Closeable {
      * else thread executor will remain active until shutdown() is called.
      *
      * @return list of T objects produced by Minions
-     * @throws InterruptedException
-     * @throws ExecutionException
+     * @throws InterruptedException if thread is interrupted
+     * @throws ExecutionException when attempting to retrieve the result of a task that aborted by throwing an exception
+     * @throws IOException if I/O error occurs
      */
     public List<T> run() throws InterruptedException, ExecutionException, IOException {
         if(stats != null) {
@@ -82,7 +83,7 @@ public class ThreadLord<T> implements Closeable {
         List<T> results = new ArrayList<>();
         stats.init(minions.size());
         List<Future<T>> resultFutures = executor.invokeAll(minions);
-        for (Future future : resultFutures) {
+        for (Future<T> future : resultFutures) {
             results.add((T) future.get());
         }
 

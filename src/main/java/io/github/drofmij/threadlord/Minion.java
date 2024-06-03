@@ -20,6 +20,10 @@ public abstract class Minion<T> implements Callable<T> {
     public Minion() {
     }
 
+    /**
+     * set the MinionStatsHandler which will be shared among all Minions
+     * @param stats
+     */
     public void setStats(MinionStatsHandler stats) {
         this.stats = stats;
     }

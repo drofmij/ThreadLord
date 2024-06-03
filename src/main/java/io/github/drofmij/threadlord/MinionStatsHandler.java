@@ -10,13 +10,16 @@ public class MinionStatsHandler {
     private int done;
     private float lastPercent = 0f;
 
+    /**
+     * plain old default constructor
+     */
     public MinionStatsHandler() {
     }
 
     /**
      * init this stats object with the total Minions that will be processed
      *
-     * @param total
+     * @param total total number of Minions to be processed
      */
     public void init(int total) {
         this.total = total;

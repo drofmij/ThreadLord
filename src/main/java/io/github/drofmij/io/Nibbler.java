@@ -66,7 +66,9 @@ public abstract class Nibbler implements Closeable {
 
     @Override
     public void close() throws IOException {
-        inputstream.close();
+        if(inputstream != null) {
+            inputstream.close();
+        }
     }
 
     public abstract void handleLine(String line);
