@@ -9,7 +9,7 @@ ThreadLord handles simple thread management for a set of Minion objects and bund
     <dependency>
       <groupId>io.github.drofmij</groupId>
       <artifactId>threadlord</artifactId>
-      <version>0.2.0.3</version>
+      <version>0.2.0.4</version>
     </dependency>
 
 
