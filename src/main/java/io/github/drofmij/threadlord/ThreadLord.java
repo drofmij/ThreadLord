@@ -4,9 +4,10 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * ThreadLord - handles simple thread management for a set of Minion objects and
@@ -81,7 +82,9 @@ public class ThreadLord<T> implements Closeable {
             System.out.println("ThreadLord processing " + minions.size() + " minions with " + numThreads + " threads.");
         }
         List<T> results = new ArrayList<>();
-        stats.init(minions.size());
+        if(stats != null) {
+            stats.init(minions.size());
+        }
         List<Future<T>> resultFutures = executor.invokeAll(minions);
         for (Future<T> future : resultFutures) {
             results.add((T) future.get());

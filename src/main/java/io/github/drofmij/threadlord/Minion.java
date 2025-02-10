@@ -1,6 +1,5 @@
 package io.github.drofmij.threadlord;
 
-import java.text.DecimalFormat;
 import java.util.concurrent.Callable;
 
 /**
@@ -22,7 +21,7 @@ public abstract class Minion<T> implements Callable<T> {
 
     /**
      * set the MinionStatsHandler which will be shared among all Minions
-     * @param stats
+     * @param stats handles stats
      */
     public void setStats(MinionStatsHandler stats) {
         this.stats = stats;
@@ -38,7 +37,9 @@ public abstract class Minion<T> implements Callable<T> {
     @Override
     public T call() throws Exception {
         T result = work();
-        stats.update();
+        if(stats != null) {
+            stats.update();
+        }
         return result;
     }
 
