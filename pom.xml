@@ -125,7 +125,7 @@
         <dependency>
             <groupId>io.github.drofmij</groupId>
             <artifactId>drofmij-io</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.1/version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
